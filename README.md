@@ -48,3 +48,22 @@ $(document).ready(function() {
 
 ```
 
+Example in Module
+```JavaScript
+
+function AnotherModule() {
+  var dog = {
+    someModule : SomeModule($("#myBox"), {  someOption : 21  })
+  }
+  
+  // .... other functions that do stuff
+  
+  function init() {
+    // init triggers initializations of things, runs only once
+  }
+  
+  init()
+  
+  return dog
+}
+```
