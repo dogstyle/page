@@ -42,7 +42,7 @@ Example on page level
 ```JavaScript
 
 $(document).ready(function() {
-  someModule = PAGE.addModule("SomeModule", ($("#myBox"), {  someOption : 21  }))
+  PAGE.addModule("SomeModule", SomeModule($("#myBox"), {  someOption : 21  }))
 })
 
 ```
