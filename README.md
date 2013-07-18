@@ -67,3 +67,7 @@ function AnotherModule() {
   return dog
 }
 ```
+
+And here is the point of Dog Style. To use google Chrome's console as a realy cool tool.
+
+![google console](http://www.mangoroom.com/work/example-console.png)
