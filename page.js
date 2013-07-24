@@ -37,26 +37,16 @@ var PAGE = (function() {
 			}
 		, wait : function(path, callback) {
 			if (typeof path === "undefined") return
-
 			var arr = path.split(".")
-
 			if (arr.length < 2) return
-
 			var group = arr[0]
 				, item = arr[1]
-
 			return this.waitLoad(group, item, callback)
 		}
 		, addModule : function(name, obj) {
 			if (!this.Modules) this.Modules = {}
 			this.Modules[name] = obj
 			log("module: " + name + " loaded")
-			return obj
-		}
-		, addQuestion : function(name, obj) {
-			if (!this.Questions) this.Questions = {}
-			this.Questions[name] = obj
-			log("question: " + name + " loaded")
 			return obj
 		}
 		, addFunction : function(name, func) {
@@ -70,11 +60,6 @@ var PAGE = (function() {
 			this.Properties[name] = value
 			log("property: " + name + " loaded")
 			return value
-		}
-		, addImages : function(obj) {
-			this.Images = obj
-			log("added all images")
-			return obj
 		}
 		, addImage : function(name, obj) {
 			if (!this.Images) this.Images = {}
