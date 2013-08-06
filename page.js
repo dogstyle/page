@@ -56,19 +56,19 @@ var PAGE = (function() {
 	}
 
 	, addModule = dog.addModule = function(name, obj) {
-		return add("Modules", name, obj)
+		return add("Modules." + name, obj)
 	}
 
-	, addConstructor = dog.addConstructor = function(name, func) {
-		return add("Constructors", name, obj)
+	, addConstructor = dog.addConstructor = function(name, obj) {
+		return add("Constructors." + name, obj)
 	}
 
-	, addFunction = dog.addFunction = function(name, func) {
-		return add("Functions", name, obj)
+	, addFunction = dog.addFunction = function(name, obj) {
+		return add("Functions." + name, obj)
 	}
 
-	, addProperty = dog.addProperty = function(name, value) {
-		return add("Properties", name, obj)
+	, addProperty = dog.addProperty = function(name, obj) {
+		return add("Properties." + name, obj)
 	}
 
 	, extend = dog.extend = function(callback) {
