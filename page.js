@@ -99,6 +99,12 @@ var PAGE = (function() {
 		typeof callback === "function" && callback(puppy, dog, log)
 	}
 
+	, add$ = dog.add$ = function(path, obj) {
+		$(document).ready(function() {
+			add(path, obj)
+		})
+	}
+
 	return puppy
 
 }())
