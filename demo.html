@@ -7,22 +7,33 @@
 <body>
 
 	<h1>This is a sample page... go to console, type in page</h1>
+	<div id="images"></div>
 	
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="page.js" type="text/javascript"></script>
 <script src="PageAddImage.js" type="text/javascript"></script>
+<script src="PageDispatcher.js" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 
 		var batch = []
+			, $images = $("#images")
 
 		for(var x = 1; x < 78; x++) {
 			batch.push("SVG/image_" + x + ".svg")
 		}
 
-		PAGE.Image.addWaitSVGBatch(batch, function(newBatch) {
-			debugger
+		PAGE.wait("Image", function(Image) {
+
+			Image.addWaitSVGBatch(batch, function($item) {
+				// $images.append($item)
+			}, function(newBatch) {
+				for(var x = 0; x < newBatch.length; x++) {
+					$images.append(newBatch[x].clone())
+				}
+			})
+
 		})
 	})
 </script>
