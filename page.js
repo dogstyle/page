@@ -4,6 +4,7 @@ var PAGE = (function() {
 		, Page  = function(){}          // base constructor
 		, dog   = Page.prototype = {}   // base prototype
 		, puppy = new Page()            // base instance
+		, interval = undefined          // timing
 
 	function log(thing) {
 		if (typeof console === "object" && options.debugMode) {
