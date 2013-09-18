@@ -109,16 +109,21 @@ var PAGE = (function() {
 	, exists = dog.exists = function (path) {
 		if (typeof path === "undefined") return
 		var arr = path.split(".")
+			, x = 0
+			, obj = puppy
+
 		if (arr.length < 1) return
-		var group = arr[0]
-			, name = arr[1]
-		if (puppy[group] && puppy[group][name]) {
-			return puppy[group][name]
+
+		while (x < arr.length) {
+			obj = obj[arr[x]]
+			if (obj === undefined) return obj
+			x++
 		}
-		return undefined
-	}	
+		return obj
+	}
 
 	return puppy
 
 }())
+
 
