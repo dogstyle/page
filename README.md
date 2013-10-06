@@ -106,7 +106,3 @@ It's most basic and important role is to organize everything inside your app int
 
 That being said, there are already many Extensions that can be added to PAGE to support greater ability beyond
 Constructors. Extensions can mutate the prototype of PAGE itself, or add functionality to it. One shining example of this is `test`. By having a consistent set of methods to add and retrieve from the PAGE object, cool possibilities open up. One of these is automated testing. with `test` added to your project, running tests is as simple as calling `PAGE.runAllTests()` in your console.
-
-
-
-
