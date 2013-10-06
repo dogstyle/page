@@ -6,36 +6,80 @@
 </head>
 <body>
 
-	<h1>This is a sample page... go to console, type <code>PAGE</code></h1>
-	<h2>Explore what has been added to your heart's content</h2>
-	<div id="images"></div>
+	<h1>This is a sample page... go to <code>console</code>, type <code>PAGE</code></h1>
 	
 </body>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="page.js" type="text/javascript"></script>
-<script src="PageAddImage.js" type="text/javascript"></script>
-<script src="PageDispatcher.js" type="text/javascript"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
 
-		var batch = []
-			, $images = $("#images")
+	/* example showing how something that loads late hangs everything, but it wont break */
+	setTimeout(function() {
+		PAGE.add("Constructors.DemoConstructor", function(val) {
+			var dog = {
+				awesome : val
+				, pausom : val
+				, poo : val
+			}
 
-		for(var x = 1; x < 78; x++) {
-			batch.push("SVG/image_" + x + ".svg")
+			return dog
+		})
+	}, 1000)
+
+	PAGE.add("Modules.demo", (function() {
+		var dog = {
+				property1 : 5
+			, property2 : 6
+			, property3 : 7
+			, property4 : 8
+			, demoConstructor : undefined /* will get loaded asynchronously */
+			, demo2 : undefined /* link to other module */
 		}
 
-		PAGE.wait("Image", function(Image) {
+		function init() {
+			PAGE.wait("Constructors.DemoConstructor", function(DemoConstructor) {
+			PAGE.wait("Modules.demo2", function(demo2) {
 
-			Image.addWaitSVGBatch(batch, function($item) {
-				// $images.append($item)
-			}, function(newBatch) {
-				for(var x = 0; x < newBatch.length; x++) {
-					$images.append(newBatch[x].clone())
-				}
+				dog.demoConstructor = DemoConstructor("hello again")
+				dog.demo2 = demo2
+
+				console.log("finished loading")
+
 			})
+			})
+		}
 
-		})
-	})
+		init()
+
+		return dog
+	}()))
+
+	PAGE.add("Modules.demo2", (function() {
+		var dog = {
+				property1 : 1
+			, property2 : 2
+			, property3 : 3
+			, property4 : 4
+			, demoConstructor : undefined /* will get loaded asynchronously */
+			, demo : undefined /* link to other module */
+		}
+
+		function init() {
+			PAGE.wait("Constructors.DemoConstructor", function(DemoConstructor) {
+			PAGE.wait("Modules.demo2", function(demo) {
+
+				dog.demoConstructor = DemoConstructor("hello")
+				dog.demo = demo
+
+				console.log("finished loading 2")
+
+			})
+			})
+		}
+
+		init()
+
+		return dog
+	}()))
+
 </script>
 </html>
