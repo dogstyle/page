@@ -167,7 +167,7 @@ funcion Widget() {
 	that.someProperty = "c"
 }
 var widget = new Widget()
-```
+``
 
 ##### vs
 
