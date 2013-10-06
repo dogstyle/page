@@ -13,6 +13,7 @@
 	+ [Debugging Made Easy](#debugging-made-easy)
 + [Usage](#usage)
 + [Extending](#extending)
++ [Testing](#testing)
 + [Dogstyle? Really? dog Style?](#dogstyle)
 
 ## Why
@@ -46,9 +47,9 @@ PAGE = {
 What are Constructors? Constructors are functions that generate Objects. These Objects can have methods, properties, and intereactions with Modules and Properties of Modules. This is a one to many relationship, one Constructor can make many Objects.
 
 ## Modules
-Modules are the living part of your app! They mutate, grow, shrink, and interact with your app. There can be no APP without Modules. But there can be an APP without Constructors.
+Modules are the living part of your app! They mutate, grow, shrink, and interact with others. There can be no APP without Modules, but there can be APPs without Constructors.
 
-In my practice I tend to keep Modules as `Singletons` that have a bunch of different methods or properties that are instances of `Constructors` or `Functions`. Though, one could choose to write Modules as instances of Constructors just as easy.
+In my practice I tend to keep Modules as `Singletons` that have a bunch of different methods or properties that are instances of `Constructors` or `Functions` whatever. Though, one could choose to write Modules as instances of Constructors just as easy.
 
 ## Functions
 Sometimes you need a simple function that will do some common work to data or DOM elements which does not mutate, nor need multiple instances.
@@ -154,6 +155,29 @@ PAGE.wait("MyExtension", function(MyExtension) {
 })
 ```
 
+### Testing
+I mentioned testing and one immediate question is, why not just integrate it into PAGE? The answer is maybe
+it should, but building testing as an extension allows for greater flexibility. Perhaps you want to use a specific
+testing library, and want to integrate it into PAGE. Why not? Fork that Shizzle Manard!
+
+That being said, the testing framework [test](https://github.com/dogstyle/test) is pretty cool, and works well
+with PAGE as is. Perhaps you want to fork this? Why not!
+
+How does testing work? Well, you just need to make sure the page.test.js file is included. And then write your
+tests. Use either the config method for loading tests dynamically, or add the test file explicitely as part of
+the add process.
+
+```JavaScript
+
+PAGE.add("Constructor.Poo", function(Poo) {
+ ...
+ ...
+}, "poo.test.js")
+
+```
+
+Doing it this way, by typing `PAGE.runAllTests()` in the console, it will load the `poo.test.js` file and run the
+tests inside.
 
 ## Dog Style
 Javascript is a very rich language. Already it has the powerful `this` keyword so why not just use `this` 
