@@ -12,6 +12,7 @@
 	+ [Create Module](#to-create-a-constructor)
 	+ [Debugging Made Easy](#debugging-made-easy)
 + [Extending](#extending)
++ [Dogstyle? Really? dog Style?](#dogstyle)
 
 ## Why
 Page.js is a humble attempt at organizing JavaScript loaded onto a page into logical groups that cannot conflict. 
@@ -25,6 +26,12 @@ Often variables will be defined at all different places inside a HTML file, or t
 What PAGE does is declares a single global variable, that your app can store everything in and access everything asyncrhonously. The method to add and retrieve from this global variable are standardized into either an asynchronous or synchronous return. Once the *Constructor* - or - *Object* - or - *Function* is avaialable, it calls back and returns it.
 
 Much like jQuery has the `$(document).ready` method, PAGE has the `PAGE.wait` mehtod. Only PAGE can load anything you feed it.
+
+
+Certain conventions are part of the dog style. 
++ a `dog` object is constructed and then returned, think of it as `this`
++ there is an `init()` function. These are for things that require loading time perhaps. Return the dog first, then add to it. The object will be preserved
+
 
 #### An Organized PAGE
 ```
@@ -111,11 +118,9 @@ to add and retrieve from the PAGE object, new possibilities open up. One of thes
 with [test](https://github.com/dogstyle/test) added to your project, building and running tests is as simple 
 as calling `PAGE.runAllTests()` in your console.
 
-> On a side note. Since PAGE, in it's normal usage is a Singleton, why mess with the prototype at all?
-> Wouldn't it be easier and more readable to just add methods and propreties. Well, yes. However, the reason 
-> for editing the prototype is a trick of the `console` and also helps differentiate the properties of the PAGE
-> from the methods from the PAGE instance. PAGE's prototype are for methods, while the properties are for all of the 
-> Constructors, Modules, Properties and whatever else you want to add.
+Look at the code of `test` and you will see that it overrides the .add() method, allowing for a third variable. 
+This is the location of the corresponding test file. `test` also allows for a test.config.js to manually add
+test suites to run.
 
 ### Cool, so how do you extend PAGE?
 ```JavaScript
@@ -140,3 +145,31 @@ PAGE.wait("MyExtension", function(MyExtension) {
 })
 ```
 
+
+## Dog Style
+Javascript is a very rich language. Already it has the powerful `this` keyword, so why not just use `that`. 
+Answer: It's easier to type dog, and find dog than it is to find `that` or this. It's short, it's memorable, dare
+I say fun? It's easy to find in your code, and if you write your stuff correctly, you will never guess as to what
+it means.
+
+Here is an example of dog style sans the PAGE object. Notice that is is pretty clear what is happening.
+
+``JavaScript
+
+function ConsExample ($elem) {
+	var dog = {
+    $elem : $elem
+	}
+
+	function init() {
+		// do something
+	}
+
+	init()
+
+	return dog
+}
+
+var someModule = ConsExample ($("#button")) 
+
+``
