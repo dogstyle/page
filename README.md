@@ -46,9 +46,7 @@ PAGE = {
 What are Constructors? Constructors are functions that generate Objects. These Objects can have methods, properties, and intereactions with Modules and Properties of Modules. This is a one to many relationship, one Constructor can make many Objects.
 
 ## Modules
-Modules are `Singleton`'s
-
-Modules are alive! They mutate, grow, shrink, and interact with your app. There can be no APP without Modules. But there can be an APP without Constructors.
+Modules are the living part of your app! They mutate, grow, shrink, and interact with your app. There can be no APP without Modules. But there can be an APP without Constructors.
 
 In my practice I tend to keep Modules as `Singletons` that have a bunch of different methods or properties that are instances of `Constructors` or `Functions`. Though, one could choose to write Modules as instances of Constructors just as easy.
 
