@@ -190,7 +190,7 @@ It's easy to find in your code, and if you write your stuff correctly, you will 
 
 Here is an example of dog style sans the PAGE object. Notice that is is pretty clear what is happening.
 
-``JavaScript
+```JavaScript
 
 function ConsExample ($elem) {
 	var dog = {
@@ -208,4 +208,4 @@ function ConsExample ($elem) {
 
 var someModule = ConsExample ($("#button")) 
 
-``
+```
