@@ -17,20 +17,18 @@
 ## Why
 Page.js is a humble attempt at organizing JavaScript loaded onto a page into logical groups that cannot conflict. 
 
-Because there are many different ways writing javascript, often there are many different approaches to declaring variables on a page. Since the `Window` object is the location for all global variables, it can be difficult to find your way when working with code you've never seen before.
+Because there are many different ways to writing javascript, often there are many different approaches to declaring variables on a page. Since the `window` object is the location for all global variables, it can be difficult to find your way when working with code you've never seen before.
 
 As a demonstration, open up your `console` , preferably in chrome, and type `window`. Once you expand this, you will see hundreds and hundreds of variables.
 
-Often variables will be defined at all different places inside a HTML file, or the many javascript files linked to it. and often they will reference other variables that are likewise scattered.  This is a messy style to inherit and is quite dangerous since it is too easy to overide a variable and break code.
+Often variables will be defined at all different places inside a HTML file, and they will fully load at different times as well through various linked files. Often they will reference other variables that are likewise scattered. It's a mess because there is no order to it. This is a messy style to inherit and is quite dangerous since it is so easy to overide a variable and break code.
 
-What PAGE does is declares a single global variable, that your app can store everything in and access everything asyncrhonously. The method to add and retrieve from this global variable are standardized into either an asynchronous or synchronous return. Once the *Constructor* - or - *Object* - or - *Function* is avaialable, it calls back and returns it.
+What PAGE does is declares a single global variable in which you decide what goes in it. It's your app's wrap. 
+Adding and retrieving properties are all done asyncrhonously. The method to add and retrieve from this global variable are standardized into either an asynchronous or synchronous return style. Once the *Constructor* - or - *Object* - or - *Function* is avaialable, it triggers the callback function, and gives you access to the scope of the returned object as well as your local scope. 
 
 Much like jQuery has the `$(document).ready` method, PAGE has the `PAGE.wait` mehtod. Only PAGE can load anything you feed it.
 
 
-Certain conventions are part of the dog style. 
-+ a `dog` object is constructed and then returned, think of it as `this`
-+ there is an `init()` function. These are for things that require loading time perhaps. Return the dog first, then add to it. The object will be preserved
 
 
 #### An Organized PAGE
@@ -209,3 +207,7 @@ function ConsExample ($elem) {
 var someModule = ConsExample ($("#button")) 
 
 ```
+#####Certain conventions are part of the dog style. 
+
++ a `dog` object is constructed and then returned, think of it as `this`
++ there is an `init()` function. These are for things that require loading time perhaps. Return the dog first, then add to it. The object will be preserved
