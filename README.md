@@ -105,4 +105,16 @@ By itself PAGE is rather low level and primitive. It's not an ajax library or an
 It's most basic and important role is to organize everything inside your app into an easy to navigate single variable that you can explore with the console tool. 
 
 That being said, there are already many Extensions that can be added to PAGE to support greater ability beyond
-Constructors. Extensions can mutate the prototype of PAGE itself, or add functionality to it. One shining example of this is [test](https://github.com/dogstyle/test). By having a consistent set of methods to add and retrieve from the PAGE object, cool possibilities open up. One of these is automated testing. with [test](https://github.com/dogstyle/test) added to your project, running tests is as simple as calling `PAGE.runAllTests()` in your console.
+Constructors. Extensions can mutate the prototype and instance of PAGE itself, or add functionality to it. 
+One shining example of this is [test](https://github.com/dogstyle/test). By having a consistent set of methods 
+to add and retrieve from the PAGE object, new possibilities open up. One of these is automated testing. 
+with [test](https://github.com/dogstyle/test) added to your project, building and running tests is as simple 
+as calling `PAGE.runAllTests()` in your console.
+
+> On a side note. Since PAGE, in it's normal usage is a Singleton, why mess with the prototype at all?
+> Wouldn't it be easier and more readable to just add methods and propreties. Well, yes. However, the reason 
+> for editing the prototype is a trick of the `console` and also helps differentiate the properties of the PAGE
+> from the methods from the page. PAGE's prototype are for methods, while the properties are for all of the 
+> Constructors, Modules, Properties and whatever else you want to add.
+
+
