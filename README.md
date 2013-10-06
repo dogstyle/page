@@ -157,7 +157,7 @@ The main reason for dog is that by defining a new variable you can have cleaner 
 Also, it's more fun to type dog, and find dog, than it is to find `that` or `this` not to mention know what 
 they mean in the context by which they are being used. See example.
 
-``JavaScript
+```JavaScript
 funcion Widget() {
 	var that = this
 	that.someProperty = 123
@@ -167,7 +167,7 @@ funcion Widget() {
 	that.someProperty = "c"
 }
 var widget = new Widget()
-``
+```
 
 ##### vs
 
