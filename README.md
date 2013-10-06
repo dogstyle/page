@@ -4,7 +4,7 @@
 + [Why](#why)
 + [Usage](#usage)
 + [Methodology](#methodology)
-+ [Extending](#extending)
++ [Extensions](#extensions)
 
 ## Why
 Page.js is a humble attempt at organizing JavaScript loaded onto a page into logical groups that cannot conflict. 
@@ -19,9 +19,7 @@ What PAGE does is declares a single global variable, that your app can store eve
 
 Much like jQuery has the `$(document).ready` method, PAGE has the `PAGE.wait` mehtod. Only PAGE can load anything you feed it.
 
-## Usage
-##### Achieving an organized APP
-Think of your app as some version of the following data structure.
+#### An Organized PAGE
 ```
 PAGE = {
     Constructors : {}
@@ -31,25 +29,27 @@ PAGE = {
 }
 ```
 
-### Constructors
+## Constructors
 What are Constructors? Constructors are functions that produce Objects (we'll call them Modules from now on). These Modules have methods, properties, and intereactions with other Modules and Properties. For simplicity sake, think of Constructors as the basis of all Modules. This is a one to many relationship, one Constructor can make many Modules.
 
-### Modules
-Modules are alive! They mutate, grow, shrink, and interact with your app. There can be no APP without Modules , but there can be an APP without Constructors.
+## Modules
+Modules are `Singleton`'s
 
-In my practice I tend to keep Modules as `Singletons` that have a bunch of different methods or properties that are instances of `Constructors`. Though, one could choose to write Modules as instances of Constructors just as easily.
+Modules are alive! They mutate, grow, shrink, and interact with your app. There can be no APP without Modules. But there can be an APP without Constructors.
 
-### Functions
+In my practice I tend to keep Modules as `Singletons` that have a bunch of different methods or properties that are instances of `Constructors` or `Functions`. Though, one could choose to write Modules as instances of Constructors just as easy.
+
+## Functions
 Sometimes you need a simple function that will do some common work to data or DOM elements which does not mutate, nor need multiple instances.
 
-### Properties
+## Properties
 These are often the Global Properties of a page, say the `Data` that is needed by the Modules. Always refrenced by Modules, never by Constructors.
 
 ## How they work together
 
 ##### to Create a Constructor
 ```JavaScript
-PAGE.add("Constructors.SomeWidget", function($ele, options) {
+PAGE.add("Constructors.ExampleCons", function($ele, options) {
     options = options || {}
     var dog = {
         $elem : $elem
@@ -63,12 +63,12 @@ PAGE.add("Constructors.SomeWidget", function($ele, options) {
 ```JavaScript
 PAGE.add$("Modules.homePage", (function() {
     var dog = {
-        someWidget : undefined /* SomeWidget */
+        exampleCons : undefined /* ExampleCons */
         , $ele : $("#button1")
     }
     function init() {
-        PAGE.wait("Constructors.SomeWidget", function(SomeWidget) {
-            dog.someWidget = SomeWidget(dog.$ele, { setting1 : true })
+        PAGE.wait("Constructors.ExampleCons", function(ExampleCons) {
+            dog.exampleCons = ExampleCons(dog.$ele, { setting1 : true })
         })
     }
     init()
@@ -77,19 +77,22 @@ PAGE.add$("Modules.homePage", (function() {
 ```
 ##### to Create a Module (non Singleton version)
 ```JavaScript
-PAGE.wait("Constructors.SomeWidget", function(SomeWidget) {
-    PAGE.add$("Modules.example", SomeWidget($("#button")))
+PAGE.wait("Constructors.ExampleCons", function(ExampleCons) {
+    PAGE.add$("Modules.exampleCons", ExampleCons($("#button")))
 })
 ```
 
 
 ### Some explanation
-`PAGE.add$` calls back once jQuery is loaded.
+`PAGE.add$` calls back once jQuery is loaded
 
 `PAGE.wait(location, callback)` waits for whatever is being passed into the first parameter, then calls back with the thing.
 
 
+Page.js fixes this by giving your 'Page' a central single variable to put all your stuff in, while still maintaining the flexibility of locally scoped variables. This is not a jQuery type of library, it's for people who know how to code javaScript well but just want a way to organize it better. 
 
+This code is part of of the greater 'dogstyle' movement with the goal of simplifying and clarifying raw javascript code. The dog style, or dog "pattern" is a practical way of writing JavaScript (EcmaScript) that affords clean modular coding practices making it easy for others to read and adapt. This style of writing code takes advantage of Javascript's scoping, and allows you to develop code in tandem with Chrome's console to rapidly build pages in a testable way.
+## Usage
 
 ## Methodology
 
