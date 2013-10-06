@@ -11,6 +11,7 @@
 	+ [Create Constructor](#to-create-a-constructor)
 	+ [Create Module](#to-create-a-constructor)
 	+ [Debugging Made Easy](#debugging-made-easy)
++ [Usage](#usage)
 + [Extending](#extending)
 + [Dogstyle? Really? dog Style?](#dogstyle)
 
@@ -42,7 +43,7 @@ PAGE = {
 ```
 
 ## Constructors
-What are Constructors? Constructors are functions that produce Objects (we'll call them Modules from now on). These Modules have methods, properties, and intereactions with other Modules and Properties. For simplicity sake, think of Constructors as the basis of all Modules. This is a one to many relationship, one Constructor can make many Modules.
+What are Constructors? Constructors are functions that generate Objects. These Objects can have methods, properties, and intereactions with Modules and Properties of Modules. This is a one to many relationship, one Constructor can make many Objects.
 
 ## Modules
 Modules are `Singleton`'s
@@ -103,6 +104,15 @@ PAGE.wait("Constructors.ExampleCons", function(ExampleCons) {
 Download the demo to a localhost box, open up the console and type PAGE. You will see something like this.
 ![google console](http://www.mangoroom.com/work/example-console.png)
 This shows everything that has been loaded into the PAGE object.
+
+## Usage
+`PAGE.add(path, callback)` -- Path "Modules.yourModule", callback(yourModule)
+
+`PAGE.add$(path, callback)` -- Path "Modules.yourModule", callback(yourModule)
+
+`PAGE.wait(path, callback)` -- Path "Constructors.MyConstructor"
+
+`PAGE.exists(path)`
 
 
 ## Extending
