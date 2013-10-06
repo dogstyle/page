@@ -147,10 +147,46 @@ PAGE.wait("MyExtension", function(MyExtension) {
 
 
 ## Dog Style
-Javascript is a very rich language. Already it has the powerful `this` keyword, so why not just use `that`. 
-Answer: It's easier to type dog, and find dog than it is to find `that` or this. It's short, it's memorable, dare
-I say fun? It's easy to find in your code, and if you write your stuff correctly, you will never guess as to what
-it means.
+Javascript is a very rich language. Already it has the powerful `this` keyword so why not just use `this` 
+or `that` as some like to do?  
+
+> If you haven't already done so, please see Crockford's talk on Javascript: The Good Parts. Specifically as to 
+> `this` and `that`, and avoiding the `new` keyword. 
+
+The main reason for dog is that by defining a new variable you can have cleaner looking code.
+Also, it's more fun to type dog, and find dog, than it is to find `that` or `this` not to mention know what 
+they mean in the context by which they are being used. See example.
+
+``JavaScript
+funcion Widget() {
+	var that = this
+	that.someProperty = 123
+	that.someProperty = 456
+	that.someProperty = "a"
+	that.someProperty = "b"
+	that.someProperty = "c"
+}
+var widget = new Widget()
+```
+
+##### vs
+
+``JavaScript
+function Widget() {
+	var dog = {
+		someProperty : 123
+		, someProperty : 456
+		, someProperty : "a"
+		, someProperty : "b"
+		, someProperty : "c"
+	}
+	return dog
+}
+var widget = Widget()
+```
+
+Think of dog as another name for `this`. It's short, it's memorable, dare I say even fun? 
+It's easy to find in your code, and if you write your stuff correctly, you will never guess as to what it means.
 
 Here is an example of dog style sans the PAGE object. Notice that is is pretty clear what is happening.
 
