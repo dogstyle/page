@@ -13,15 +13,15 @@ Because there are many different ways writing javascript, often there are many d
 
 As a demonstration, open up your `console` , preferably in chrome, and type `window`. Once you expand this, you will see hundreds and hundreds of variables.
 
-What PAGE does is declares a single global variable, whereby all other variables get passed into. The method to add and retrieve from this global variable are standardized in an asynchronous way. Once the *Constructor* - or - *Object* - or - *Function* are loaded, it calls back and returns it.
+Often variables will be defined at all different places inside a HTML file, or the many javascript files linked to it. and often they will reference other variables that are likewise scattered.  This is a messy style to inherit and is quite dangerous since it is too easy to overide a variable and break code.
 
-Much like jQuery has the `$(document).ready` method, PAGE has the `PAGE.wait` mehtod. Only PAGE can load anything you feed it. 
+What PAGE does is declares a single global variable, that your app can store everything in and access everything asyncrhonously. The method to add and retrieve from this global variable are standardized into either an asynchronous or synchronous return. Once the *Constructor* - or - *Object* - or - *Function* is avaialable, it calls back and returns it.
 
-#### Organize your APP
+Much like jQuery has the `$(document).ready` method, PAGE has the `PAGE.wait` mehtod. Only PAGE can load anything you feed it.
+
+#### An Organized PAGE
 ```
-// Think of your app structured like this
-
-var myApp = {
+PAGE = {
     Constructors : {}
     , Functions : {}
     , Modules : {}
@@ -30,18 +30,64 @@ var myApp = {
 ```
 
 ## Constructors
-What are Constructors? Constructors are functions that produce Objects (we'll call them Modules from now on). These Modules have methods, properties, and intereactions with other Modules and Properties. For simplicity sake, think of Constructors are basis of all Modules. This is a one to many relationship, one Constructor can make many Modules.
+What are Constructors? Constructors are functions that produce Objects (we'll call them Modules from now on). These Modules have methods, properties, and intereactions with other Modules and Properties. For simplicity sake, think of Constructors as the basis of all Modules. This is a one to many relationship, one Constructor can make many Modules.
 
 ## Modules
-Modules are the `instance` of the Constructor. Modules are alive! They mutate, they change all around, they grow, shrink, and interact. They need Constructors to generate parts of themselves.
+Modules are `Singleton`'s
+
+Modules are alive! They mutate, grow, shrink, and interact with your app. There can be no APP without Modules. But there can be an APP without Constructors.
+
+In my practice I tend to keep Modules as `Singletons` that have a bunch of different methods or properties that are instances of `Constructors` or `Functions`. Though, one could choose to write Modules as instances of Constructors just as easy.
 
 ## Functions
-Sometimes you need a function that will do some common work in your module or constructor.
+Sometimes you need a simple function that will do some common work to data or DOM elements which does not mutate, nor need multiple instances.
 
 ## Properties
-These are often the Global Properties of a page, say the `Data` that gets passed into the Module.
+These are often the Global Properties of a page, say the `Data` that is needed by the Modules. Always refrenced by Modules, never by Constructors.
 
-Often variables will be defined at all different places inside a HTML file, or the many javascript files linked to it. and often they will reference other variables that are likewise scattered.  This is a messy style to inherit and is quite dangerous since it is too easy to overide a variable and break code.  
+## How they work together
+
+##### to Create a Constructor
+```JavaScript
+PAGE.add("Constructors.ExampleCons", function($ele, options) {
+    options = options || {}
+    var dog = {
+        $elem : $elem
+        , someMethod : function() { return this }
+        , options : options
+    }
+    return dog
+})
+```
+##### to Create a Module
+```JavaScript
+PAGE.add$("Modules.homePage", (function() {
+    var dog = {
+        exampleCons : undefined /* ExampleCons */
+        , $ele : $("#button1")
+    }
+    function init() {
+        PAGE.wait("Constructors.ExampleCons", function(ExampleCons) {
+            dog.exampleCons = ExampleCons(dog.$ele, { setting1 : true })
+        })
+    }
+    init()
+    return dog
+}()))
+```
+##### to Create a Module (non Singleton version)
+```JavaScript
+PAGE.wait("Constructors.ExampleCons", function(ExampleCons) {
+    PAGE.add$("Modules.exampleCons", ExampleCons($("#button")))
+})
+```
+
+
+### Some explanation
+`PAGE.add$` calls back once jQuery is loaded
+
+`PAGE.wait(location, callback)` waits for whatever is being passed into the first parameter, then calls back with the thing.
+
 
 Page.js fixes this by giving your 'Page' a central single variable to put all your stuff in, while still maintaining the flexibility of locally scoped variables. This is not a jQuery type of library, it's for people who know how to code javaScript well but just want a way to organize it better. 
 
