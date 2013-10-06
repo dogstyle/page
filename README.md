@@ -2,22 +2,35 @@
 
 ### Legend
 + [Why](#why)
++ [An Organized PAGE](#an-organized-page)
+	+ [Constructors](#constructors)
+	+ [Modules](#modules)
+	+ [Functions](#functions)
+	+ [Properties](#properties)
++ [How they work together](#how-they-work-together)
+	+ [Create Constructor](#to-create-a-constructor)
+	+ [Create Module](#to-create-a-constructor)
+	+ [Debugging Made Easy](#debugging-made-easy)
 + [Usage](#usage)
-+ [Methodology](#methodology)
-+ [Extensions](#extensions)
++ [Extending](#extending)
++ [Dogstyle? Really? dog Style?](#dogstyle)
 
 ## Why
 Page.js is a humble attempt at organizing JavaScript loaded onto a page into logical groups that cannot conflict. 
 
-Because there are many different ways writing javascript, often there are many different approaches to declaring variables on a page. Since the `Window` object is the location for all global variables, it can be difficult to find your way when working with code you've never seen before.
+Because there are many different ways to writing javascript, often there are many different approaches to declaring variables on a page. Since the `window` object is the location for all global variables, it can be difficult to find your way when working with code you've never seen before.
 
 As a demonstration, open up your `console` , preferably in chrome, and type `window`. Once you expand this, you will see hundreds and hundreds of variables.
 
-Often variables will be defined at all different places inside a HTML file, or the many javascript files linked to it. and often they will reference other variables that are likewise scattered.  This is a messy style to inherit and is quite dangerous since it is too easy to overide a variable and break code.
+Often variables will be defined at all different places inside a HTML file, and they will fully load at different times as well through various linked files. Often they will reference other variables that are likewise scattered. It's a mess because there is no order to it. This is a messy style to inherit and is quite dangerous since it is so easy to overide a variable and break code.
 
-What PAGE does is declares a single global variable, that your app can store everything in and access everything asyncrhonously. The method to add and retrieve from this global variable are standardized into either an asynchronous or synchronous return. Once the *Constructor* - or - *Object* - or - *Function* is avaialable, it calls back and returns it.
+What PAGE does is declares a single global variable in which you decide what goes in it. It's your app's wrap. 
+Adding and retrieving properties are all done asyncrhonously. The method to add and retrieve from this global variable are standardized into either an asynchronous or synchronous return style. Once the *Constructor* - or - *Object* - or - *Function* is avaialable, it triggers the callback function, and gives you access to the scope of the returned object as well as your local scope. 
 
 Much like jQuery has the `$(document).ready` method, PAGE has the `PAGE.wait` mehtod. Only PAGE can load anything you feed it.
+
+
+
 
 #### An Organized PAGE
 ```
@@ -30,7 +43,7 @@ PAGE = {
 ```
 
 ## Constructors
-What are Constructors? Constructors are functions that produce Objects (we'll call them Modules from now on). These Modules have methods, properties, and intereactions with other Modules and Properties. For simplicity sake, think of Constructors as the basis of all Modules. This is a one to many relationship, one Constructor can make many Modules.
+What are Constructors? Constructors are functions that generate Objects. These Objects can have methods, properties, and intereactions with Modules and Properties of Modules. This is a one to many relationship, one Constructor can make many Objects.
 
 ## Modules
 Modules are `Singleton`'s
@@ -82,26 +95,137 @@ PAGE.wait("Constructors.ExampleCons", function(ExampleCons) {
 })
 ```
 
-
 ### Some explanation
 `PAGE.add$` calls back once jQuery is loaded
 
 `PAGE.wait(location, callback)` waits for whatever is being passed into the first parameter, then calls back with the thing.
 
-
-Page.js fixes this by giving your 'Page' a central single variable to put all your stuff in, while still maintaining the flexibility of locally scoped variables. This is not a jQuery type of library, it's for people who know how to code javaScript well but just want a way to organize it better. 
-
-This code is part of of the greater 'dogstyle' movement with the goal of simplifying and clarifying raw javascript code. The dog style, or dog "pattern" is a practical way of writing JavaScript (EcmaScript) that affords clean modular coding practices making it easy for others to read and adapt. This style of writing code takes advantage of Javascript's scoping, and allows you to develop code in tandem with Chrome's console to rapidly build pages in a testable way.
-## Usage
-
-## Methodology
-
-## Extensions
-
-
-
-Play around with the demo on a localhost box, open up the console and type PAGE. You will see something like this.
-
+## Debugging made easy
+Download the demo to a localhost box, open up the console and type PAGE. You will see something like this.
 ![google console](http://www.mangoroom.com/work/example-console.png)
+This shows everything that has been loaded into the PAGE object.
 
-This shows everything that has been loaded to the PAGE.
+## Usage
++ `PAGE.add(path, callback)` -- Path "Modules.yourModule", callback(yourModule)
++ `PAGE.addModule(path, callback)` -- callback (module)
++ `PAGE.addConstructor(path, callback)` -- callback (Constructor)
++ `PAGE.addProperty(path, callback)` -- callback (property)
++ `PAGE.addFunction(path, callback)` -- callback (function)
++ `PAGE.add$(path, callback)` -- Path "Modules.yourModule", callback(yourModule) waits for jQuery
++ `PAGE.wait(path, callback)` -- Path "Constructors.MyConstructor", callback (MyConstructor)
++ `PAGE.waitLoad(group, name, callback)` -- group [Constructors || Modules ..], callback (nameOfObj)
++ `PAGE.waitProto(path, callback)` -- Path "nameOfPrototype", callback (nameOfPrototype)
++ `PAGE.exists(path)` -- Path "Properties.Data.SomePoint.SomeOtherPoint", returns [object || undefined]
++ `PAGE.extend(callback)` -- callback (instance, prototype, log)
+
+## Extending
+By itself PAGE is rather low level and primitive. It's not an ajax library / dom library like jQuery.
+It's most basic and important role is to organize everything inside your app into an easy to navigate single variable that you can explore with a console.
+
+That being said, there are already many Extensions that can be added to PAGE to support greater ability beyond
+Constructors. Extensions can mutate the prototype and instance of PAGE itself, or add functionality to it. 
+One shining example of this is [test](https://github.com/dogstyle/test). By having a consistent set of methods 
+to add and retrieve from the PAGE object, new possibilities open up. One of these is automated testing. 
+with [test](https://github.com/dogstyle/test) added to your project, building and running tests is as simple 
+as calling `PAGE.runAllTests()` in your console.
+
+Look at the code of `test` and you will see that it overrides the .add() method, allowing for a third variable. 
+This is the location of the corresponding test file. `test` also allows for a test.config.js to manually add
+test suites to run.
+
+### Cool, so how do you extend PAGE?
+```JavaScript
+PAGE.extend(function(puppy, dog, log) {
+ // puppy --- instance
+ // dog   --- prototype
+ // log   --- common logging (console.log)
+
+	dog.MyExtension = {
+		doThis : function() {}
+		, doThat : function() {}
+		, doThisOther : function() {}
+	}
+
+})
+```
+
+### Awesome, how do access them asynchronously
+```JavaScript
+PAGE.wait("MyExtension", function(MyExtension) {
+	MyExtension.doThis()
+})
+```
+
+
+## Dog Style
+Javascript is a very rich language. Already it has the powerful `this` keyword so why not just use `this` 
+or `that` as some like to do?  
+
+> If you haven't already done so, please see Crockford's talk on Javascript: The Good Parts. Specifically as to 
+> `this` and `that`, and avoiding the `new` keyword. 
+
+The main reason for dog is that by defining a new variable you can have cleaner looking code.
+Also, it's more fun to type dog, and find dog, than it is to find `that` or `this` not to mention know what 
+they mean in the context by which they are being used. See example.
+
+```JavaScript
+funcion Widget() {
+	var that = this
+	that.someProperty = 123
+	that.someProperty = 456
+	that.someProperty = "a"
+	that.someProperty = "b"
+	that.someProperty = "c"
+}
+var widget = new Widget()
+```
+
+##### vs
+
+```JavaScript
+function Widget() {
+	var dog = {
+		someProperty : 123
+		, someProperty : 456
+		, someProperty : "a"
+		, someProperty : "b"
+		, someProperty : "c"
+	}
+	return dog
+}
+var widget = Widget()
+```
+
+Think of dog as another name for `this`. It's short, it's memorable, dare I say even fun? 
+It's easy to find in your code, and if you write your stuff correctly, you will never guess as to what it means.
+
+Here is an example of dog style sans the PAGE object. Notice that is is pretty clear what is happening.
+
+```JavaScript
+
+function ConsExample ($elem) {
+	var dog = {
+    $elem : $elem
+	}
+
+	function init() {
+		// do something
+	}
+
+	init()
+
+	return dog
+}
+
+var someModule = ConsExample ($("#button")) 
+
+```
+#####Certain conventions are part of the dog style. 
+
++ every `dog` has his day. Or, a dog returns
++ a `dog` object is constructed and then returned, think of it as `this`
++ `init()` function clearly defines when certain time sensitive properties can be added
++ `event()` function, which get triggered inside the `init()` function. Not required, but often helpful
+
+
+
