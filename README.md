@@ -107,13 +107,16 @@ This shows everything that has been loaded into the PAGE object.
 
 ## Usage
 `PAGE.add(path, callback)` -- Path "Modules.yourModule", callback(yourModule)
-
-`PAGE.add$(path, callback)` -- Path "Modules.yourModule", callback(yourModule)
-
-`PAGE.wait(path, callback)` -- Path "Constructors.MyConstructor"
-
-`PAGE.exists(path)`
-
+`PAGE.addModule(path, callback)` -- callback (module)
+`PAGE.addConstructor(path, callback)` -- callback (Constructor)
+`PAGE.addProperty(path, callback)` -- callback (property)
+`PAGE.addFunction(path, callback)` -- callback (function)
+`PAGE.add$(path, callback)` -- Path "Modules.yourModule", callback(yourModule) waits for jQuery
+`PAGE.wait(path, callback)` -- Path "Constructors.MyConstructor", callback (MyConstructor)
+`PAGE.waitLoad(group, name, callback)` -- group [Constructors || Modules ..], callback (nameOfObj)
+`PAGE.waitProto(path, callback)` -- Path "nameOfPrototype", callback (nameOfPrototype)
+`PAGE.exists(path)` -- Path "Properties.Data.SomePoint.SomeOtherPoint", returns [object || undefined]
+`PAGE.extend(callback)` -- callback (instance, prototype, log)
 
 ## Extending
 By itself PAGE is rather low level and primitive. It's not an ajax library / dom library like jQuery.
