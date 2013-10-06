@@ -101,8 +101,8 @@ This shows everything that has been loaded into the PAGE object.
 
 
 ## Extending
-By itself PAGE is rather low level and primitive. It's not an ajax library or anything fancy like that.
-It's most basic and important role is to organize everything inside your app into an easy to navigate single variable that you can explore with the console tool. 
+By itself PAGE is rather low level and primitive. It's not an ajax library / dom library like jQuery.
+It's most basic and important role is to organize everything inside your app into an easy to navigate single variable that you can explore with a console.
 
 That being said, there are already many Extensions that can be added to PAGE to support greater ability beyond
 Constructors. Extensions can mutate the prototype and instance of PAGE itself, or add functionality to it. 
@@ -114,7 +114,29 @@ as calling `PAGE.runAllTests()` in your console.
 > On a side note. Since PAGE, in it's normal usage is a Singleton, why mess with the prototype at all?
 > Wouldn't it be easier and more readable to just add methods and propreties. Well, yes. However, the reason 
 > for editing the prototype is a trick of the `console` and also helps differentiate the properties of the PAGE
-> from the methods from the page. PAGE's prototype are for methods, while the properties are for all of the 
+> from the methods from the PAGE instance. PAGE's prototype are for methods, while the properties are for all of the 
 > Constructors, Modules, Properties and whatever else you want to add.
 
+### Cool, so how do you extend PAGE?
+```JavaScript
+PAGE.extend(function(puppy, dog, log) {
+ // puppy --- instance
+ // dog   --- prototype
+ // log   --- common logging (console.log)
+
+	dog.MyExtension = {
+		doThis : function() {}
+		, doThat : function() {}
+		, doThisOther : function() {}
+	}
+
+})
+```
+
+### Awesome, how do access them asynchronously
+```JavaScript
+PAGE.wait("MyExtension", function(MyExtension) {
+	MyExtension.doThis()
+})
+```
 
