@@ -171,7 +171,7 @@ var widget = new Widget()
 
 ##### vs
 
-``JavaScript
+```JavaScript
 function Widget() {
 	var dog = {
 		someProperty : 123
