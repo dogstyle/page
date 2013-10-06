@@ -222,5 +222,10 @@ var someModule = ConsExample ($("#button"))
 ```
 #####Certain conventions are part of the dog style. 
 
++ every `dog` has his day. Or, a dog returns
 + a `dog` object is constructed and then returned, think of it as `this`
-+ there is an `init()` function. These are for things that require loading time perhaps. Return the dog first, then add to it. The object will be preserved
++ `init()` function clearly defines when certain time sensitive properties can be added
++ `event()` function, which get triggered inside the `init()` function. Not required, but often helpful
+
+
+
