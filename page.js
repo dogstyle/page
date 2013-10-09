@@ -1,18 +1,21 @@
 var PAGE = (function() {
 
-	var options = { debugMode : true }
-		, Page  = function(){}          // base constructor
+	var Page  = function(){}          // base constructor
 		, dog   = Page.prototype = {}   // base prototype
 		, puppy = new Page()            // base instance
 		, interval = undefined          // timing
 
-	function log(thing) {
-		if (typeof console === "object" && options.debugMode) {
+		puppy.options = { 
+			suppressDebug : false
+		}
+
+	var log = dog.log = function(thing) {
+		if (typeof console === "object" && !puppy.options.suppressDebug) {
 			console.log(thing)
 		}
 	}
 
-	var add = dog.add = function(path, obj) {
+	dog.add = function(path, obj) {
 		if (typeof path === "undefined") return
 		var arr = path.split(".")
 		if (arr.length < 2) return
@@ -22,7 +25,7 @@ var PAGE = (function() {
 		return puppy[group][item] = obj
 	}
 
-	var waitProto = dog.waitProto = function(name, callback) {
+	dog.waitProto = function(name, callback) {
 		var limit = 1000
 			, count = 0
 			, interval
@@ -47,7 +50,7 @@ var PAGE = (function() {
 		}, 10)
 	}
 
-	var waitLoad = dog.waitLoad = function(group, name, callback) {
+	dog.waitLoad = function(group, name, callback) {
 			var limit = 1000
 				, count = 0
 				, interval
@@ -72,41 +75,41 @@ var PAGE = (function() {
 			}, 10)
 		}
 
-	, wait = dog.wait = function(path, callback) {
+	dog.wait = function(path, callback) {
 		if (typeof path === "undefined") return
 		var arr = path.split(".")
 		if (arr.length < 1) return
-		if (arr.length < 2) return waitProto(arr[0], callback)
-		return waitLoad(arr[0], arr[1], callback)
+		if (arr.length < 2) return dog.waitProto(arr[0], callback)
+		return dog.waitLoad(arr[0], arr[1], callback)
 	}
 
-	, addModule = dog.addModule = function(name, obj) {
-		return add("Modules." + name, obj)
+	dog.addModule = function(name, obj) {
+		return dog.add("Modules." + name, obj)
 	}
 
-	, addConstructor = dog.addConstructor = function(name, obj) {
-		return add("Constructors." + name, obj)
+	dog.addConstructor = function(name, obj) {
+		return dog.add("Constructors." + name, obj)
 	}
 
-	, addFunction = dog.addFunction = function(name, obj) {
-		return add("Functions." + name, obj)
+	dog.addFunction = function(name, obj) {
+		return dog.add("Functions." + name, obj)
 	}
 
-	, addProperty = dog.addProperty = function(name, obj) {
-		return add("Properties." + name, obj)
+	dog.addProperty = function(name, obj) {
+		return dog.add("Properties." + name, obj)
 	}
 
-	, extend = dog.extend = function(callback) {
+	dog.extend = function(callback) {
 		typeof callback === "function" && callback(puppy, dog, log)
 	}
 
-	, add$ = dog.add$ = function(path, obj) {
+	dog.add$ = function(path, obj) {
 		$(document).ready(function() {
-			add(path, obj)
+			dog.add(path, obj)
 		})
 	}
 
-	, exists = dog.exists = function (path) {
+	dog.exists = function (path) {
 		if (typeof path === "undefined") return
 		var arr = path.split(".")
 			, x = 0
@@ -125,5 +128,3 @@ var PAGE = (function() {
 	return puppy
 
 }())
-
-
