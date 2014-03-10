@@ -117,9 +117,16 @@ var PAGE = (function() {
 
 		waitList[name] = false
 
+		// check the prototype for the thing
 		if (dog[name]) {
 			waitList[name] = true
 			return callback(dog[name])
+		}
+
+		// ah hell, check the instance also, means you can't have it in both places, not sure if this is a good thing or not
+		if (puppy[name]) {
+			waitList[name] = true
+			return callback(puppy[name])
 		}
 
 		interval = setInterval(function() {
@@ -228,13 +235,20 @@ var PAGE = (function() {
 	* PAGE.wait("Constructors.Popup", callback, refObj)
 	*
 	* */
-	dog.wait = function(path, callback, refObj) {
+	var _wait = function(path, callback, refObj) {
 		refObj = refObj || {}
 		if (typeof path === "undefined") return
 		var arr = path.split(".")
 		if (arr.length < 1) return
 		if (arr.length < 2) return dog.waitProto(arr[0], callback)
 		return dog.waitLoad(arr[0], arr[1], callback, refObj)
+	}
+
+	// allow putting multiple paths into the standard wait function
+	dog.wait = function(path, path2, path3, callback, refObj) {
+		var map = mapArguments(arguments)
+		if (map.Str && map.Str.length > 1) return dog.batchWait.apply(this, arguments)
+		else return _wait.apply(this, arguments)
 	}
 
 	/* take a path and check against a the global window variable by default, or set in another variable 
@@ -251,6 +265,7 @@ var PAGE = (function() {
 	 * add is boolean and optional, add it to the Lib 
 	 * callback is function and optional returns the thing */
 	dog.waitWindow = function(path, add, obj, callback) {
+
 		var map = mapArguments(arguments)
 		if (map.Fun) callback = map.Fun[0]
 		if (map.Boo) add = map.Boo[0]
@@ -258,8 +273,21 @@ var PAGE = (function() {
 		if (map.Obj) obj = map.Obj[0]
 		else obj = window
 
-		var name = path.split(".").reverse()[0]
-			, glob = dog.exists(path, obj)
+		// var name = path.split(".").reverse()[0]
+		var name = (function() {
+			if (!path) {
+				return "undefined" + String(Math.random()).replace(".","")
+			}
+
+			var arr = path.split(".")
+			if (!arr.length) {
+				return name
+			} else {
+				return arr.reverse()[0]
+			}
+		}())
+
+		var glob = dog.exists(path, obj)
 
 		if (glob) {
 			callback(glob)
@@ -349,7 +377,7 @@ var PAGE = (function() {
 	* var shoppingCart = PAGE.exists("Properties.ShoppingCart")
 	*/
 	dog.exists = function (path, base) {
-		if (typeof path === "undefined") return
+		if (typeof path === "undefined" || typeof path === "object") return
 		var arr = path.split(".")
 			, x = 0
 			, obj = base || puppy
@@ -370,7 +398,7 @@ var PAGE = (function() {
 			, ref = ref || {}
 		for (var x = 0; x < arr.length; x++) {
 			;(function(index, arr) {
-				dog.wait(arr[index], function(f) {
+				_wait(arr[index], function(f) {
 					count += 1
 					var name = arr[index].split(".").reverse()[0]
 					ref[name] = f
@@ -383,27 +411,15 @@ var PAGE = (function() {
 		return puppy
 	}
 
-	dog.batchWait = function(str, str, str, obj, callback) {
-		var args = arguments
-			, arr = [] 
-			, ref
-			, x  
-			, callback
-			, map = {}
+	dog.batchWait = function(str, str2, str3, obj, callback) {
+		var arr = [] 
+			, ref = {}
+			, map = mapArguments(arguments)
 
-		for(x in arguments) {
-			if (typeof arguments[x] === "string") arr.push(arguments[x])
-				if (typeof arguments[x] === "object") {
-					if (arguments[x].constructor === Array) {
-						arr = arr.concat(arguments[x])
-					} else {
-						ref = arguments[x]
-					}
-				}
-			if (typeof arguments[x] === "function") callback = arguments[x]
-		}
-
-		if (!ref) ref = {}
+		if (map.Fun) callback = map.Fun[0]
+		if (map.Str) arr = map.Str
+		if (map.Obj) ref = map.Obj[0]
+		if (map.Arr) arr.concat(map.Str)
 
 		dog.batchWaitRef(arr, ref, callback)
 	}
@@ -435,32 +451,57 @@ var PAGE = (function() {
 
 	var mapArguments = dog.Helpers.mapArguments = function(args) {
 		var map = {}
-		, type
+		// , type
 
 		function pushIn(name, item) {
-			name = name.substr(0,1).toUpperCase() + name.substr(1,2)
 			if (!map[name]) map[name] = []
 			map[name].push(item)
 		}
 
 		for(var y = 0; y < args.length; y++) {
-			type = typeof args[y]
+
+			var type = typeof args[y]
+
+			if (type === "undefined") {
+				pushIn("Und", args[y])
+				continue
+			}
+
+			if (type === "function") {
+				pushIn("Fun", args[y])
+				continue
+			}
+
+			if (type === "string") {
+				pushIn("Str", args[y])
+				continue
+			}
+
+			if (type === "boolean") {
+				pushIn("Boo", args[y])
+				continue
+			}
+
+			if (type === "number") {
+				pushIn("Num", args[y])
+				continue
+			}
 
 			if (type === "object") {
 				if (args[y] === null) {
-					pushIn("nul", args[y])
+					pushIn("Nul", args[y])
 					continue
 				}
 				if (args[y].constructor === Array) {
-					pushIn("arr", args[y])
+					pushIn("Arr", args[y])
 					continue
 				}
 				if  (args[y] instanceof Error) { 
-					pushIn("err", args[y])
+					pushIn("Error", args[y])
 					continue
 				}
+				pushIn("Obj", args[y])
 			}
-			pushIn(type, args[y])
 		}
 
 		return map
