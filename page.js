@@ -112,7 +112,7 @@ var PAGE = (function() {
 		, allowCache = map.Boo ? map.Boo[0] : false
 
 		if (!map.Str) return
-		if (map.Str > 1) {
+		if (map.Str.length > 1) {
 			for (var x in map.Str) loadScript(map.Str[x], allowCache)
 			return
 		}
@@ -129,7 +129,7 @@ var PAGE = (function() {
 
 		var fileref = document.createElement('script')
 		fileref.setAttribute("type","text/javascript")
-		fileref.setAttribute("src", pathToFile + "?" + increment) // increment or randomize
+		fileref.setAttribute("src", pathToFile.replace(/^~/,"") + "?" + increment) // increment or randomize
 		fileref.setAttribute("id", scriptId)
 		document.getElementsByTagName("head")[0].appendChild(fileref)
 	}
@@ -320,10 +320,17 @@ var PAGE = (function() {
 	*/
 	
 	var waitExists = dog.waitExists = function(path, base, func) {
-		var thing = dog.exists(path,base)
+		var thing
 			, limit = 100
 			, count = 0
 			, interval
+
+		if (typeof base === "function") {
+			func = base
+			base = undefined
+		}
+
+		thing = dog.exists(path, base)
 
 		waitList[path] = false
 
@@ -334,6 +341,7 @@ var PAGE = (function() {
 			return thing
 		}
 		interval = setInterval(function() {
+			count++
 			if (count > limit) {
 				console.error("could not find " + path)
 				clearInterval(interval)
@@ -441,3 +449,4 @@ var PAGE = (function() {
 window.PAGE = PAGE
 
 }())
+
