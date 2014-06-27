@@ -119,7 +119,7 @@ var PAGE = (function() {
 
 		var pathToFile = map.Str[0]
 
-		var scriptId = pathToFile.replace(/\./g,"_").replace(/\//g, "_")
+		var scriptId = pathToFile.replace(/\./g,"_").replace(/\//g, "_").replace(":","")
 			, existingElm = document.getElementById(scriptId)
 			, increment = allowCache ? String(scriptNumber++) : (String((Math.random() * 1000)).replace(/\./,""))
 
@@ -132,6 +132,8 @@ var PAGE = (function() {
 		fileref.setAttribute("src", pathToFile.replace(/^~/,"") + "?" + increment) // increment or randomize
 		fileref.setAttribute("id", scriptId)
 		document.getElementsByTagName("head")[0].appendChild(fileref)
+
+		return puppy
 	}
 
 	/* method for loading external libries, that get dumped into the PAGE.Lib object. 
@@ -139,18 +141,21 @@ var PAGE = (function() {
 	* Use for testing. Production code should load as bundled minified code */
 	dog.AddExternalLib = dog.addExternalLib = function(path, globalVarName, callback) {
 
-		var thing = exists("Lib." + globalVarName)
+		var thing = exists(globalVarName, window)
 
 		if (thing) {
 			typeof callback === "function" && callback(thing)
-			return
+			return puppy
 		}
 
-		dog.loadScript(path, true)
+		dog.loadScript(path, false)
 
 		waitExists(globalVarName, window, function(glob) {
 			puppy.add("Lib." + globalVarName, glob)
+			typeof callback === "function" && callback(glob)
 		})
+
+		return puppy
 	}
 
 	// allow putting multiple paths into the standard wait function
@@ -177,13 +182,10 @@ var PAGE = (function() {
 	dog.waitWindow = function(/* path, add, obj, callback */) {
 
 		var map = mapArguments(arguments)
-			, callback = function(){}
-
-		if (map.Fun) callback = map.Fun[0]
-		if (map.Boo) add = map.Boo[0]
-		if (map.Str) path = map.Str[0]
-		if (map.Obj) obj = map.Obj[0]
-		else obj = window
+		, callback = map.Fun ? map.Fun[0] || function(){} : function(){}
+		, add = map.Boo ? map.Boo[0] || false : false
+		, path = map.Str ? map.Str[0] : undefined
+		, obj = map.Obj ? map.Obj[0] : window
 
 		var name = (function() {
 			if (!path) {
@@ -199,9 +201,7 @@ var PAGE = (function() {
 		}())
 
 		waitExists(path, obj, function(thing) {
-			if (add) {
-				PAGE.spawn("Lib." + name, thing)
-			}
+			if (add) PAGE.spawn("Lib." + name, thing)
 			callback(thing)
 		})
 	}
@@ -312,6 +312,73 @@ var PAGE = (function() {
 			}
 			x++
 		}
+	}
+
+	/* remove from page, and from base, and maybe swap it for this, return old */
+	dog.remove = function (path, base, swap) {
+		if (typeof path === "undefined" || typeof path === "object") return
+		var arr = path.split(".")
+			, x = 0
+			, obj = base || puppy
+
+		if (arr.length < 1) return
+
+		while (x < arr.length) {
+
+			if (x === arr.length - 1) {
+				var hold = obj[arr[x]]
+				if (swap) {
+					obj[arr[x]] = swap
+				} else {
+					delete obj[arr[x]]
+				}
+				return hold
+			} else {
+				if (obj[arr[x]] === undefined) {
+					obj = obj[arr[x]] = { }
+				} else {
+					obj = obj[arr[x]]
+				}
+			}
+			x++
+		}
+	}
+
+	/* used in testing, to swap out existing libraries for mock libraries
+	// call it like this
+	//	var swap = PAGE.SwapLib({
+	//		"Modules.dataService" : {}
+	//		, "Modules.commonMessage" : { someMethod : function(){} }
+	//		, "Constructors.YourConstructor" : function(){}
+	//		, "Constructors.AnotherConstructor" : function(){}
+	//	})
+	//
+	//	then to return, do swap.restore() */
+	dog.SwapLib = function(hash) {
+
+		var pup = {
+			restore : undefined // function(){}
+			, store : {}
+		}
+
+		function init() {
+
+			for (var x in hash) {
+				pup.store[x] = dog.remove(x, puppy, hash[x])
+			}
+
+		}
+
+		pup.restore = function() {
+			for (var x in pup.store) {
+				dog.spawn(x, pup.store[x])
+				delete pup.store[x]
+			}
+		}
+
+		init()
+
+		return pup
 	}
 
 	/* waitExists --- wait for something to exist then do something 
@@ -438,7 +505,7 @@ var PAGE = (function() {
 		return map
 	}
 
-	dog.version = "2.0.1"
+	dog.version = "2.0.2"
 
 	// now we return the whole puppy!
 	return puppy
@@ -449,4 +516,5 @@ var PAGE = (function() {
 window.PAGE = PAGE
 
 }())
+
 
